@@ -10,6 +10,6 @@ ul.articles-list li img {
     width: 100px;
 }
 
-ul.articles-list {
-
+ul.articles-list .article-additional-info {
+    display: none;
 }
