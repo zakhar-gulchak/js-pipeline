@@ -3,7 +3,9 @@ var app = express();
 var logger = require('morgan');
 app.use(logger('combined'));
 
-app.get('/', function(request, response) {
+app.use('/', express.static('public'));
+
+app.get('/test', function(request, response) {
     response.send('Hello World!');
 });
 
