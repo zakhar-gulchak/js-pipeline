@@ -6,7 +6,8 @@
     "start": "node app"
   },
   "dependencies": {
-    "express": "~4.12.2"
+    "express": "~4.12.2",
+    "morgan": "*"
   },
   "engines": {
     "node": "0.12.x",
