@@ -1,0 +1,15 @@
+ul.articles-list {
+    list-style: none outside none;
+}
+
+ul.articles-list li h2 {
+    font-size: 16px;
+}
+
+ul.articles-list li img {
+    width: 100px;
+}
+
+ul.articles-list {
+
+}
