@@ -1,50 +1,28 @@
-var url = 'http://pipes.yahoo.com/pipes/pipe.run?_id=e9a2e77dffb3205d035c4e311d77bbe6&_render=json&_callback=parseJSON';
-function showAdditionalInfo(self) {
-    self.nextSibling.style.display = 'block';
-}
+var parseJSON = function(obj) {
+    delete window.parseJSON;
 
-function parseJSON(obj) {
-    var articlesList = document.createElement('ul');
-    articlesList.setAttribute('class', 'articles-list');
+    var articlesList = '';
     for (var key in obj.value.items) {
         var value = obj.value.items[key];
-        var articleItem = document.createElement('li');
 
-        var articleMainInfo = document.createElement('div');
-        articleMainInfo.setAttribute('onclick', 'showAdditionalInfo(this)');
-        articleMainInfo.setAttribute('class', 'article-main-info');
-        var articleTitle = document.createElement('h2');
-        articleTitle.innerHTML = value.title;
-        var articleImage = document.createElement('img');
-        articleImage.setAttribute('src', value.enclosure.url);
-        articleMainInfo.appendChild(articleTitle);
-        articleMainInfo.appendChild(articleImage);
+        var articleMainInfo = '<div class="article-main-info" onclick="this.nextSibling.style.display = \'block\';">' +
+            '<h2>' + value.title + '</h2>' +
+            '<img src=" ' + value.enclosure.url + '" />' +
+            '</div>';
 
-        var articleAdditionalInfo = document.createElement('div');
-        articleAdditionalInfo.setAttribute('class', 'article-additional-info');
-        var articleLinkBlock = document.createElement('div');
-        articleLinkBlock.innerHTML = 'Link: ';
-        var articleLink = document.createElement('a');
-        articleLink.setAttribute('href', value.link);
-        articleLink.innerHTML = value.link;
-        articleLinkBlock.appendChild(articleLink);
-        var articleDescription = document.createElement('div');
-        articleDescription.setAttribute('class', 'article-description');
-        articleDescription.innerHTML = value.description;
-        articleAdditionalInfo.appendChild(articleDescription);
-        articleAdditionalInfo.appendChild(articleLinkBlock);
+        var articleAdditionalInfo = '<div class="article-additional-info">' +
+            '<div class="article-description">' + value.description + '</div>' +
+            '<div>Link: <a href="' + value.link + '">' + value.link + '</a></div>' +
+            '</div>';
 
-        articleItem.appendChild(articleMainInfo);
-        articleItem.appendChild(articleAdditionalInfo);
-        articlesList.appendChild(articleItem);
+        articlesList += '<li>' + articleMainInfo + articleAdditionalInfo + '</li>';
     }
-    document.getElementById('container').appendChild(articlesList);
-}
 
-function addScript(src) {
+    document.getElementById('container').innerHTML = '<ul class="articles-list">' + articlesList + '</ul>';
+};
+
+(function(){
     var elem = document.createElement("script");
-    elem.src = src;
+    elem.src = 'http://pipes.yahoo.com/pipes/pipe.run?_id=e9a2e77dffb3205d035c4e311d77bbe6&_render=json&_callback=parseJSON';
     document.head.appendChild(elem);
-}
-
-addScript(url);
+})();
