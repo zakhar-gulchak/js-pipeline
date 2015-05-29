@@ -1,19 +1,23 @@
-var parseJSON = function(obj) {
-    delete window.parseJSON;
+(function(){
+    var elem = document.createElement("script");
+    elem.src = 'http://pipes.yahoo.com/pipes/pipe.run?_id=e9a2e77dffb3205d035c4e311d77bbe6&_render=json&_callback=parseJSON';
+    document.head.appendChild(elem);
 
-    var template = function(templateString, variables) {
-        return templateString.replace(/\{\{ (.+?) \}\}/g, function(str, p1) {
+    window.parseJSON = function(obj) {
+        delete window.parseJSON;
 
-            return variables[p1];
-        });
-    };
+        var template = function(templateString, variables) {
+            return templateString.replace(/\{\{ (.+?) \}\}/g, function(str, p1) {
+                if(variables.hasOwnProperty(p1))
+                    return variables[p1];
 
-    var articlesList = '';
-    for (var key in obj.value.items) {
-        var value = obj.value.items[key];
+                return false;
+            });
+        };
 
-         var html = '<li>' +
-            '<div class="article-main-info" onclick="this.nextSibling.style.display = \'block\';">' +
+        var articlesList = '';
+        var html = '<li>' +
+            '<div class="article-main-info">' +
             '<h2>{{ title }}</h2>' +
             '<img src="{{ img }}" />' +
             '</div>' +
@@ -22,16 +26,17 @@ var parseJSON = function(obj) {
             '<div>Link: <a href="{{ link }}">{{ link }}</a></div>' +
             '</div>' +
             '</li>';
-        var variables = {title: value.title, img: value.enclosure.url, description: value.description,
-            link: value.link};
-        articlesList += template(html, variables);
-    }
+        for (var key in obj.value.items) {
+            var value = obj.value.items[key];
+            articlesList += template(html, {title: value.title, img: value.enclosure.url, description: value.description,
+                link: value.link});
+        }
 
-    document.getElementById('container').innerHTML = '<ul class="articles-list">' + articlesList + '</ul>';
-};
-
-(function(){
-    var elem = document.createElement("script");
-    elem.src = 'http://pipes.yahoo.com/pipes/pipe.run?_id=e9a2e77dffb3205d035c4e311d77bbe6&_render=json&_callback=parseJSON';
-    document.head.appendChild(elem);
+        document.getElementById('articles-list').innerHTML = articlesList;
+        document.getElementById('articles-list').onclick = function(e) {
+            var articleMainInfo = e.srcElement;
+            if (articleMainInfo.className == 'article-main-info')
+                articleMainInfo.nextSibling.style.display = 'block';
+        };
+    };
 })();
