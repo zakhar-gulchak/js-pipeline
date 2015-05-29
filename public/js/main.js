@@ -8,10 +8,7 @@
 
         var template = function(templateString, variables) {
             return templateString.replace(/\{\{ (.+?) \}\}/g, function(str, p1) {
-                if(variables.hasOwnProperty(p1))
-                    return variables[p1];
-
-                return false;
+                return variables[p1];
             });
         };
 
@@ -27,9 +24,11 @@
             '</div>' +
             '</li>';
         for (var key in obj.value.items) {
-            var value = obj.value.items[key];
-            articlesList += template(html, {title: value.title, img: value.enclosure.url, description: value.description,
-                link: value.link});
+            if (obj.value.items.hasOwnProperty(key)) {
+                var value = obj.value.items[key];
+                articlesList += template(html, {title: value.title, img: value.enclosure.url, description: value.description,
+                    link: value.link});
+            }
         }
 
         document.getElementById('articles-list').innerHTML = articlesList;
