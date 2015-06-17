@@ -33,9 +33,13 @@
 
         document.getElementById('articles-list').innerHTML = articlesList;
         document.getElementById('articles-list').onclick = function(e) {
-            var articleMainInfo = e.srcElement;
-            if (articleMainInfo.className == 'article-main-info')
+            var articleMainInfo = e.target;
+            console.log(articleMainInfo.parentNode.className);
+            if (articleMainInfo.className == 'article-main-info') {
                 articleMainInfo.nextSibling.style.display = 'block';
+            } else if (articleMainInfo.parentNode.className == 'article-main-info') {
+                articleMainInfo.parentNode.nextSibling.style.display = 'block';
+            }
         };
     };
 })();
